@@ -1,11 +1,19 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 const Footer = () => {
 	return (
-		<Typography variant='h4' component='h3' align='center'>
-			Project created during Wizeline Academy React Testing Bootcamp
-		</Typography>
+		<Box
+			mt={2}
+			sx={{
+				backgroundColor: '#000000',
+				color: '#ffffff',
+			}}
+		>
+			<Typography variant='h5' component='h3' align='center'>
+				Project created during Wizeline Academy React Testing Bootcamp
+			</Typography>
+		</Box>
 	);
 };
 
