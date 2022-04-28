@@ -1,0 +1,14 @@
+ {
+   
+     "transform": {
+       "^.+\\.(js|jsx)$": "babel-jest"
+    },
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
+     
+  }
+
+ 
