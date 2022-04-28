@@ -1,21 +1,21 @@
 /* eslint-disable no-undef */
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { format, addDays } from 'date-fns';
 
 import MainSection from '.';
 
-const setup = () => render(<MainSection />);
+const setup = async () => await render(<MainSection />);
 
 describe('The app should show the Picture of the Day', () => {
-	it('should set default value', function () {
+	it('should set default value', async () => {
 		setup();
 		const dateInComponent = format(new Date(), 'MM/dd/yyyy');
 		const input = screen.getByLabelText('Choose a date');
 		expect(input).toHaveValue(dateInComponent);
 	});
+
 	it('include image', () => {
 		setup();
 		const image = screen.getByAltText('image-nasa');
@@ -39,18 +39,23 @@ describe('When the user selects a specific date, should show the picture of the 
 		expect(input).toHaveValue(dateInComponent);
 	});
 	// });
-	it('should set value date', async () => {
+	it('should show the picture of the day', async () => {
 		setup();
+		const today = new Date();
 		const input = screen.getByLabelText('Choose a date');
-		const dateInComponent = format(new Date('Apr 30, 2022'), 'MM/dd/yyyy');
-		userEvent.type(input, dateInComponent);
-		const chosenDate = screen.getByRole('button', { name: 'Apr 30, 2022' });
+		const dateInComponent = format(today, 'MM/dd/yyyy');
+		const result = format(today, 'MMM dd, yyyy');
+		await userEvent.type(input, dateInComponent);
+		const chosenDate = screen.getByRole('button', { name: `${result}` });
+		await fireEvent.click(chosenDate);
 
-		await act(async () => {
-			await fireEvent.click(chosenDate);
-		});
-
-		expect(input).toHaveValue(dateInComponent);
+		await waitFor(
+			() => {
+				const Date = screen.getByText(`Date: ${format(today, 'dd/MM/yyyy')}`);
+				expect(Date).toBeInTheDocument();
+			},
+			{ timeout: 3000 }
+		);
 	});
 });
 
@@ -63,9 +68,7 @@ describe('When the user selects an invalid date value and clicks on the show but
 		userEvent.type(input, dateInComponent);
 		const chosenDate = screen.getByRole('button', { name: `${result}` });
 
-		await act(async () => {
-			await fireEvent.click(chosenDate);
-		});
+		await fireEvent.click(chosenDate);
 
 		await waitFor(
 			async () => {
@@ -89,15 +92,12 @@ describe('When the app fetches the API, and there is an unexpected error, the ap
 
 		const chosenDate = screen.getByRole('button', { name: `${result}` });
 
-		await act(async () => {
-			await fireEvent.click(chosenDate);
-			await userEvent.type(input, dateInComponent);
-		});
+		await fireEvent.click(chosenDate);
+		await userEvent.type(input, dateInComponent);
 
 		await waitFor(
 			async () => {
 				const Error = await screen.findByText(/error/i);
-				screen.debug(Error);
 				expect(Error).toBeInTheDocument();
 			},
 			{

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
 	Alert,
 	AlertTitle,
@@ -13,20 +12,20 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { getData } from '../../services';
 import { addDays, format } from 'date-fns';
+import { useEffect, useState } from 'react';
 
 const MainSection = () => {
-	const [date, setDate] = React.useState(new Date());
-	const [data, setData] = React.useState(null);
-	const [dataError, setDataError] = React.useState(null);
+	const [date, setDate] = useState(new Date());
+	const [data, setData] = useState(null);
+	const [dataError, setDataError] = useState(null);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		(async function () {
 			try {
 				setDataError(null);
 				const response = await getData({ date: format(date, 'yyyy-MM-dd') });
 				setData(response.data);
 			} catch (e) {
-				console.log('🚀 ~ file: MainSection.js ~ line 29 ~ e', e);
 				const error = e.response.data;
 				if (error.code === 400) {
 					setDataError(error);
@@ -50,10 +49,6 @@ const MainSection = () => {
 						label='Choose a date'
 						value={date}
 						onChange={newDate => {
-							console.log(
-								'🚀 ~ file: MainSection.js ~ line 51 ~ MainSection ~ newDate',
-								newDate
-							);
 							setDate(newDate);
 						}}
 						renderInput={params => <TextField {...params} />}

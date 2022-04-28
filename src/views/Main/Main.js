@@ -1,4 +1,3 @@
-import React from 'react';
 import Footer from '../../ui-component/Footer/Footer';
 import Header from '../../ui-component/Header/Header';
 import MainSection from '../../ui-component/MainSection/';
